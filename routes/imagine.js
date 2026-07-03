@@ -31,4 +31,9 @@ router.post('/', async (req, res) => {
     } catch (error) {
         console.error('❌ Error en /api/imagine:', error);
         res.status(500).json({
-            error: "El generador de imagenes no esta disponible ahora. Int
+            error: "El generador de imagenes no esta disponible ahora. Intenta de nuevo mas tarde."
+        });
+    }
+});
+
+module.exports = router;
