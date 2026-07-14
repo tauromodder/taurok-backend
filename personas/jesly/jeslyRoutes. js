@@ -1,0 +1,41 @@
+// personas/jesly/jeslyRoutes.js
+
+const express = require('express');
+const router = express.Router();
+const jeslyData = require('./jeslyData');
+
+// Ruta para obtener todos los datos de Jesly
+router.get('/jesly', (req, res) => {
+  res.json({
+    success: true,
+    data: jeslyData,
+  });
+});
+
+// Ruta para obtener un campo específico (ej: /jesly/nombreCompleto)
+router.get('/jesly/:campo', (req, res) => {
+  const campo = req.params.campo;
+  if (jeslyData.hasOwnProperty(campo)) {
+    res.json({
+      success: true,
+      [campo]: jeslyData[campo],
+    });
+  } else {
+    res.status(404).json({
+      success: false,
+      mensaje: `Campo "${campo}" no encontrado en los datos de Jesly`,
+    });
+  }
+});
+
+// Ruta para actualizar datos (opcional)
+router.put('/jesly', (req, res) => {
+  // Aquí podrías actualizar algún campo
+  // Por simplicidad solo respondemos
+  res.json({
+    success: true,
+    mensaje: "Ruta de actualización (pendiente de implementar)",
+  });
+});
+
+module.exports = router;
