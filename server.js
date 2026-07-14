@@ -15,10 +15,16 @@ const taurokRoutes = require('./routes/taurok');
 const astromRoutes = require('./routes/astrom');
 const imagineRoutes = require('./routes/imagine');
 
+// 👇 NUEVA: Importar ruta de Jesly
+const jeslyRoutes = require('./personas/jesly/jeslyRoutes');
+
 // Usar Rutas
 app.use('/api/taurok', taurokRoutes);
 app.use('/api/astrom', astromRoutes);
 app.use('/api/imagine', imagineRoutes);
+
+// 👇 NUEVA: Usar rutas de Jesly
+app.use('/api/personas', jeslyRoutes); // Todas las rutas estarán en /api/personas/
 
 // Ruta de salud
 app.get('/health', (req, res) => {
@@ -28,7 +34,9 @@ app.get('/health', (req, res) => {
         services: {
             taurok: 'Groq/Llama',
             astrom: 'DeepSeek (NVIDIA)',
-            imagine: 'Pollinations AI'
+            imagine: 'Pollinations AI',
+            // 👇 NUEVO
+            personas: 'Jesly - Base de datos personal'
         }
     });
 });
@@ -40,7 +48,11 @@ app.get('/', (req, res) => {
         endpoints: {
             taurok: '/api/taurok',
             astrom: '/api/astrom',
-            imagine: '/api/imagine'
+            imagine: '/api/imagine',
+            // 👇 NUEVO
+            personas: '/api/personas',
+            jesly: '/api/personas/jesly',
+            jeslyResumen: '/api/personas/jesly/resumen'
         }
     });
 });
@@ -53,5 +65,6 @@ app.listen(PORT, () => {
     console.log('   - Taurok (Groq/Llama)');
     console.log('   - Astrom (DeepSeek/NVIDIA)');
     console.log('   - Imagine (Pollinations)');
+    console.log('   - Personas (Jesly) 🐇'); // 👈 NUEVO
     console.log('=================================');
 });
