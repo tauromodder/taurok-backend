@@ -4,37 +4,90 @@ const express = require('express');
 const router = express.Router();
 const jeslyData = require('./jeslyData');
 
-// Ruta para obtener todos los datos de Jesly
+// ===== RUTAS PÚBLICAS =====
+
+// Obtener TODOS los datos de Jesly
 router.get('/jesly', (req, res) => {
   res.json({
     success: true,
     data: jeslyData,
+    timestamp: new Date().toISOString(),
   });
 });
 
-// Ruta para obtener un campo específico (ej: /jesly/nombreCompleto)
-router.get('/jesly/:campo', (req, res) => {
-  const campo = req.params.campo;
-  if (jeslyData.hasOwnProperty(campo)) {
+// Obtener datos por categoría (personal, estudios, gustos, etc.)
+router.get('/jesly/categoria/:categoria', (req, res) => {
+  const categoria = req.params.categoria;
+  
+  if (jeslyData.hasOwnProperty(categoria)) {
     res.json({
       success: true,
-      [campo]: jeslyData[campo],
+      categoria: categoria,
+      data: jeslyData[categoria],
+      timestamp: new Date().toISOString(),
     });
   } else {
     res.status(404).json({
       success: false,
-      mensaje: `Campo "${campo}" no encontrado en los datos de Jesly`,
+      mensaje: `Categoría "${categoria}" no encontrada`,
+      categoriasDisponibles: Object.keys(jeslyData),
     });
   }
 });
 
-// Ruta para actualizar datos (opcional)
-router.put('/jesly', (req, res) => {
-  // Aquí podrías actualizar algún campo
-  // Por simplicidad solo respondemos
+// Obtener un campo específico (ej: /jesly/campo/personal/nombreCompleto)
+router.get('/jesly/campo/:categoria/:campo', (req, res) => {
+  const { categoria, campo } = req.params;
+  
+  try {
+    if (jeslyData[categoria] && jeslyData[categoria][campo] !== undefined) {
+      res.json({
+        success: true,
+        categoria,
+        campo,
+        valor: jeslyData[categoria][campo],
+        timestamp: new Date().toISOString(),
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        mensaje: `Campo "${campo}" no encontrado en categoría "${categoria}"`,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      mensaje: "Error al obtener el campo",
+      error: error.message,
+    });
+  }
+});
+
+// Obtener información resumida (para presentación rápida)
+router.get('/jesly/resumen', (req, res) => {
   res.json({
     success: true,
-    mensaje: "Ruta de actualización (pendiente de implementar)",
+    resumen: {
+      nombre: jeslyData.personal.nombreCompleto,
+      apodo: jeslyData.personal.apodo,
+      edad: jeslyData.personal.edad,
+      signo: jeslyData.personal.signoZodiacal,
+      colorFavorito: jeslyData.gustos.colorFavorito,
+      musica: jeslyData.gustos.musica.generos.join(", "),
+      deporte: jeslyData.gustos.deportes.favorito,
+      pasatiempos: jeslyData.personalidad.pasatiempos.join(", "),
+    },
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// ===== RUTA DE PRUEBA (para verificar que funciona) =====
+router.get('/jesly/test', (req, res) => {
+  res.json({
+    success: true,
+    mensaje: "✅ Ruta de Jesly funcionando correctamente",
+    version: jeslyData.metadata.version,
+    ultimaActualizacion: jeslyData.metadata.ultimaActualizacion,
   });
 });
 
