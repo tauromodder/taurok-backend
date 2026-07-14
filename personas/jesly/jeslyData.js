@@ -4,7 +4,7 @@ const jesly = {
   // Datos Personales
   nombreCompleto: "Jesly Jhajaira Roman Daga",
   fechaNacimiento: "2007-08-02",
-  apodo para jesly: "Conejita 🐇",
+  apodo: "El apodo actual para jesly es (Conejita 🐇) elegido por ella misma y lamada asi por el creador tauro.",
   edadActual: 18, // para julio 2026, próximamente 19
   signoZodiacal: "Leo",
   religion: "Cristiana Evangélica",
